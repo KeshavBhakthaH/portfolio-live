@@ -267,17 +267,19 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     };
 
-    videoCards.forEach(card => {
-        const iframe = card.querySelector('.video-preview');
-        if (iframe && iframe.tagName === 'IFRAME') {
-            initVimeoPlayer(card, iframe);
-        }
-    });
-
-    // Intersection Observer for autoplay
+    // Intersection Observer for lazy-initialization and autoplay
     const videoObserver = new IntersectionObserver((entries) => {
         entries.forEach(entry => {
-            const player = vimeoPlayers.get(entry.target.querySelector('.video-preview'));
+            const iframe = entry.target.querySelector('.video-preview');
+            if (!iframe) return;
+
+            // 1. Lazy Initialization: only start Vimeo player when card is near viewport
+            if (entry.isIntersecting && !vimeoPlayers.has(iframe)) {
+                initVimeoPlayer(entry.target, iframe);
+            }
+
+            // 2. Autoplay Control: play when in view, pause when not
+            const player = vimeoPlayers.get(iframe);
             if (player) {
                 if (entry.isIntersecting) {
                     if (player.isReady) player.play().catch(() => {});
@@ -286,7 +288,10 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
             }
         });
-    }, { threshold: 0.15 });
+    }, { 
+        threshold: 0.15,
+        rootMargin: '200px' // Start loading slightly before it hits the screen
+    });
     videoCards.forEach(card => videoObserver.observe(card));
 
     // 4. Testimonial Logic
