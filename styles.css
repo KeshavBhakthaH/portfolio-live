@@ -1970,21 +1970,21 @@ a {
     .testimonial-new-section {
         padding: 80px 24px;
         min-height: auto;
-        overflow: hidden;
-    }
-
-    .testimonial-new-label {
-        top: 20px;
-        left: 24px;
-        font-size: 28px;
-    }
-
-    .testimonial-new-container {
-        width: 100% !important;
-        height: auto !important;
         display: flex;
         flex-direction: column;
         overflow: hidden;
+    }
+
+    #video-testimonial-container {
+        width: 60% !important;
+        margin: 0 auto !important;
+        height: auto !important;
+        aspect-ratio: 16 / 9;
+    }
+
+    #testimonial-video-player {
+        width: 100% !important;
+        height: 100% !important;
     }
 
     .testimonial-main-content {
@@ -2150,8 +2150,9 @@ a {
         max-width: 100%;
     }
 
-    .short-form-grid {
-        grid-template-columns: 1fr 1fr !important;
+    .portfolio-grid {
+        grid-template-columns: 1fr !important;
+        gap: 20px;
     }
 
     .long-form-grid {
