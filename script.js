@@ -573,4 +573,22 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         });
     });
+
+    // 6. Background Grid Spotlight Effect
+    const spotlights = document.querySelectorAll('.grid-spotlight');
+    if (spotlights.length > 0) {
+        window.addEventListener('mousemove', (e) => {
+            const { clientX, clientY } = e;
+            spotlights.forEach(spotlight => {
+                const rect = spotlight.getBoundingClientRect();
+                const x = clientX - rect.left;
+                const y = clientY - rect.top;
+                
+                // Update the mask position dynamically to follow the cursor
+                const maskStyle = `circle 280px at ${x}px ${y}px`;
+                spotlight.style.webkitMaskImage = `radial-gradient(${maskStyle}, black 0%, transparent 100%)`;
+                spotlight.style.maskImage = `radial-gradient(${maskStyle}, black 0%, transparent 100%)`;
+            });
+        });
+    }
 });
