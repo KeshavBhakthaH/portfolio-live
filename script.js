@@ -6,6 +6,9 @@ document.addEventListener('DOMContentLoaded', () => {
     const cursor = document.querySelector('.custom-cursor');
     const cursorDot = document.querySelector('.cursor-dot');
     if (cursor) {
+        // Light-background sections where cursor should turn black
+        const lightSections = document.querySelectorAll('.about-section, .services-section, .testimonial-new-section, .portfolio-section');
+
         document.addEventListener('mousemove', (e) => {
             cursor.style.left = e.clientX + 'px';
             cursor.style.top = e.clientY + 'px';
@@ -13,17 +16,34 @@ document.addEventListener('DOMContentLoaded', () => {
                 cursorDot.style.left = e.clientX + 'px';
                 cursorDot.style.top = e.clientY + 'px';
             }
+
+            // Detect if cursor is over a light-background section
+            let overLight = false;
+            lightSections.forEach(section => {
+                const rect = section.getBoundingClientRect();
+                if (e.clientY >= rect.top && e.clientY <= rect.bottom &&
+                    e.clientX >= rect.left && e.clientX <= rect.right) {
+                    overLight = true;
+                }
+            });
+
+            if (overLight) {
+                cursor.classList.add('cursor-black');
+            } else {
+                cursor.classList.remove('cursor-black');
+            }
         });
+
         const hoverables = document.querySelectorAll('a, button, .video-card, .nav-arrow, .category-tab, .contact-submit, .service-pill, .minimal-mute-btn');
         hoverables.forEach(el => {
             el.addEventListener('mouseenter', () => {
-                cursor.classList.add('hover');
-                if (cursorDot) cursorDot.classList.add('hover');
+                cursor.classList.add('cursor-hover');
+                if (cursorDot) cursorDot.classList.add('cursor-hover');
                 if (el.classList.contains('video-card')) cursor.classList.add('cursor-more');
             });
             el.addEventListener('mouseleave', () => {
-                cursor.classList.remove('hover', 'cursor-more');
-                if (cursorDot) cursorDot.classList.remove('hover');
+                cursor.classList.remove('cursor-hover', 'cursor-more');
+                if (cursorDot) cursorDot.classList.remove('cursor-hover');
             });
         });
     }
@@ -31,7 +51,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // 2. Text Scrubbing Utility
     const headlines = document.querySelectorAll('.scrub-text, .about-headline');
     headlines.forEach(headline => {
-        const wrapWords = (node) => {
+        const wrapWords = (node, isRed = false) => {
             if (node.nodeType === Node.TEXT_NODE) {
                 const words = node.textContent.split(/(\s+)/);
                 const fragment = document.createDocumentFragment();
@@ -40,6 +60,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         const span = document.createElement('span');
                         span.textContent = word;
                         span.className = 'type-word';
+                        if (isRed) span.dataset.originalColor = 'red';
                         span.style.color = '#D9D9D9';
                         span.style.display = 'inline-block';
                         span.style.transition = 'color 0.1s ease';
@@ -50,9 +71,10 @@ document.addEventListener('DOMContentLoaded', () => {
                 });
                 return fragment;
             } else if (node.nodeType === Node.ELEMENT_NODE) {
+                const childIsRed = isRed || node.classList.contains('highlight-red');
                 const childNodes = Array.from(node.childNodes);
                 node.innerHTML = '';
-                childNodes.forEach(child => node.appendChild(wrapWords(child)));
+                childNodes.forEach(child => node.appendChild(wrapWords(child, childIsRed)));
                 return node;
             }
             return node;
@@ -98,7 +120,11 @@ document.addEventListener('DOMContentLoaded', () => {
             progress = Math.max(0, Math.min(1, progress));
             const wordsToFill = Math.floor(progress * words.length);
             words.forEach((word, index) => {
-                word.style.color = index < wordsToFill ? '#000000' : '#D9D9D9';
+                if (index < wordsToFill) {
+                    word.style.color = (word.dataset.originalColor === 'red') ? '#FF0000' : '#000000';
+                } else {
+                    word.style.color = '#D9D9D9';
+                }
             });
         });
 
@@ -144,47 +170,91 @@ document.addEventListener('DOMContentLoaded', () => {
     window.videoProgressMap = new Map();
     const videoCards = document.querySelectorAll('.video-card');
 
-    videoCards.forEach(card => {
-        const iframe = card.querySelector('.video-preview');
-        if (iframe && iframe.tagName === 'IFRAME') {
-            const player = new Vimeo.Player(iframe);
-            vimeoPlayers.set(iframe, player);
-            player.isReady = false;
-            
-            const loaderOverlay = document.createElement('div');
+    // Helper: initialize a single Vimeo player with auto-retry on failure
+    const initVimeoPlayer = (card, iframe, retryCount = 0) => {
+        const MAX_RETRIES = 3;
+        const originalSrc = iframe.getAttribute('data-original-src') || iframe.src;
+        iframe.setAttribute('data-original-src', originalSrc);
+
+        const player = new Vimeo.Player(iframe);
+        vimeoPlayers.set(iframe, player);
+        player.isReady = false;
+
+        // Get or create loader overlay
+        let loaderOverlay = card.querySelector('.video-loader-overlay');
+        if (!loaderOverlay) {
+            loaderOverlay = document.createElement('div');
             loaderOverlay.classList.add('video-loader-overlay');
             loaderOverlay.textContent = '0%';
             card.appendChild(loaderOverlay);
+        }
+        loaderOverlay.style.opacity = '1';
 
-            window.videoProgressMap.set(iframe, 0);
+        window.videoProgressMap.set(iframe, 0);
 
-            player.ready().then(() => {
-                player.isReady = true;
-                player.setQuality('360p');
-                player.setMuted(true);
-            });
+        const retryLoad = () => {
+            if (retryCount >= MAX_RETRIES) {
+                loaderOverlay.textContent = 'Reload';
+                loaderOverlay.style.cursor = 'pointer';
+                loaderOverlay.style.pointerEvents = 'auto';
+                loaderOverlay.onclick = () => {
+                    loaderOverlay.textContent = '0%';
+                    loaderOverlay.style.cursor = '';
+                    loaderOverlay.style.pointerEvents = '';
+                    loaderOverlay.onclick = null;
+                    iframe.src = originalSrc;
+                    initVimeoPlayer(card, iframe, 0);
+                };
+                return;
+            }
+            const delay = Math.pow(2, retryCount + 1) * 1000; // 2s, 4s, 8s
+            console.warn(`Vimeo video retry ${retryCount + 1}/${MAX_RETRIES} in ${delay / 1000}s`, originalSrc);
+            loaderOverlay.textContent = 'Retrying...';
+            setTimeout(() => {
+                iframe.src = originalSrc;
+                initVimeoPlayer(card, iframe, retryCount + 1);
+            }, delay);
+        };
 
-            player.on('progress', (data) => {
-                const p = data.percent;
-                window.videoProgressMap.set(iframe, p);
-                loaderOverlay.textContent = `${Math.round(p * 100)}%`;
-                if (p >= 0.95) {
-                    loaderOverlay.style.opacity = '0';
-                    setTimeout(() => loaderOverlay.remove(), 500);
-                }
-                if (window.updateGlobalPreloader) window.updateGlobalPreloader();
-            });
+        player.ready().then(() => {
+            player.isReady = true;
+            player.setQuality('360p');
+            player.setMuted(true);
+        }).catch(() => {
+            retryLoad();
+        });
 
-            // If video starts playing, hide the loader immediately
-            player.on('play', () => {
+        player.on('error', () => {
+            retryLoad();
+        });
+
+        player.on('progress', (data) => {
+            const p = data.percent;
+            window.videoProgressMap.set(iframe, p);
+            loaderOverlay.textContent = `${Math.round(p * 100)}%`;
+            if (p >= 0.95) {
                 loaderOverlay.style.opacity = '0';
                 setTimeout(() => loaderOverlay.remove(), 500);
-            });
+            }
+            if (window.updateGlobalPreloader) window.updateGlobalPreloader();
+        });
 
-            player.on('loaded', () => {
-                window.videoProgressMap.set(iframe, Math.max(window.videoProgressMap.get(iframe) || 0, 0.1));
-                if (window.updateGlobalPreloader) window.updateGlobalPreloader();
-            });
+        // If video starts playing, hide the loader immediately
+        player.on('play', () => {
+            loaderOverlay.style.opacity = '0';
+            setTimeout(() => loaderOverlay.remove(), 500);
+        });
+
+        player.on('loaded', () => {
+            window.videoProgressMap.set(iframe, Math.max(window.videoProgressMap.get(iframe) || 0, 0.1));
+            if (window.updateGlobalPreloader) window.updateGlobalPreloader();
+        });
+    };
+
+    videoCards.forEach(card => {
+        const iframe = card.querySelector('.video-preview');
+        if (iframe && iframe.tagName === 'IFRAME') {
+            initVimeoPlayer(card, iframe, 0);
         }
     });
 
@@ -301,6 +371,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
                 tQuoteEl.style.opacity = '1';
                 tQuoteEl.style.transform = 'translateY(0)';
+                // Sync color immediately after content change
+                handleScrollEffects();
             }, 300);
         };
 
@@ -329,7 +401,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         let totalBufferedScale = 0;
-        const targetPerVideo = 0.5; // Load 50% of each to satisfy the "load half" requirement
+        const targetPerVideo = 0.1; // Reduced to 10% (initial load) to drastically speed up preloader
         
         map.forEach(p => {
             totalBufferedScale += Math.min(p, targetPerVideo);
@@ -339,7 +411,7 @@ document.addEventListener('DOMContentLoaded', () => {
         let displayPercent = Math.floor((totalBufferedScale / maxScale) * 100);
         
         if (displayPercent > 100) displayPercent = 100;
-        if (preloaderNum) preloaderNum.textContent = displayPercent;
+        if (preloaderNum) preloaderNum.textContent = displayPercent + ' %';
 
         if (displayPercent >= 100) {
             finishPreloader();
@@ -350,23 +422,97 @@ document.addEventListener('DOMContentLoaded', () => {
         if (isFinished) return;
         isFinished = true;
         
+        // Fast UI transition setup
+        let currentDisplay = parseInt(preloaderNum?.textContent) || 0;
+        
         setTimeout(() => {
             if (sitePreloader) sitePreloader.classList.add('hidden');
             document.body.classList.remove('preloader-active');
             // Trigger hero animations if they exist
             document.querySelector('.hero-content')?.classList.add('reveal');
-        }, 500);
+        }, 300);
     };
 
-    // Safety Timeout: Force open after 15 seconds regardless of buffering
+    // Fast Safety Timeout: Max 8 seconds waiting
     setTimeout(() => { 
         if (!isFinished) { 
-            if (preloaderNum) preloaderNum.textContent = "100"; 
+            if (preloaderNum) preloaderNum.textContent = "100 %"; 
             finishPreloader(); 
         } 
-    }, 15000);
+    }, 8000);
 
-    // 6. Utility Logic
+    // 6. Service Overlay Logic
+    const serviceData = {
+        'content-planning-pill': {
+            index: '01',
+            title: 'Content Planning',
+            description: 'Engineering viral content from your existing library and build a multi-platform distribution system that converts.',
+            items: ['Brand Strategy', 'Visual Identity', 'Content Planning', 'Personalized content building']
+        },
+        'video-scripting-pill': {
+            index: '02',
+            title: 'Video Scripting',
+            description: 'Crafting compelling narratives and tight retention-focused hooks to capture and hold audience attention up to the last second.',
+            items: ['Concept Development', 'Hook Writing', 'Storyboarding', 'Retention-Focused Scripting']
+        },
+        'video-editing-pill': {
+            index: '03',
+            title: 'Video Editing',
+            description: 'Premium editing that hooks viewers — transforming long-form content into high-performing shorts and reels',
+            items: ['Video Editing', 'Long Form Content Repurposing', 'Podcast repurposing', 'High Retention Editing']
+        }
+    };
+
+    const servicePills = document.querySelectorAll('.service-pill');
+    const serviceOverlay = document.getElementById('service-detail-overlay');
+    const closeOverlayBtn = document.querySelector('.close-overlay');
+    const overlayTitle = document.getElementById('overlay-title-text');
+    const overlayContainer = document.getElementById('overlay-items-container');
+
+    // Make sure we have a description paragraph, if not create one
+    let overlayDesc = document.querySelector('.overlay-description');
+    if (!overlayDesc && overlayTitle) {
+        overlayDesc = document.createElement('p');
+        overlayDesc.className = 'overlay-description';
+        overlayTitle.parentNode.insertBefore(overlayDesc, overlayTitle.nextSibling);
+    }
+
+    servicePills.forEach(pill => {
+        pill.addEventListener('click', () => {
+            const data = serviceData[pill.id];
+            if (!data) return;
+
+            // Populate text
+            overlayTitle.innerHTML = `<span style="color: #666; font-size: 0.7em;">${data.index}</span> ${data.title}`;
+            overlayDesc.textContent = data.description;
+            
+            // Populate items
+            overlayContainer.innerHTML = '';
+            data.items.forEach((itemText, i) => {
+                const numStr = String(i + 1).padStart(2, '0');
+                const itemDiv = document.createElement('div');
+                itemDiv.className = 'detail-item';
+                itemDiv.innerHTML = `
+                    <span class="detail-number">${numStr}</span>
+                    <span class="detail-text">${itemText}</span>
+                `;
+                overlayContainer.appendChild(itemDiv);
+            });
+
+            // Show overlay
+            serviceOverlay.classList.add('active');
+            document.body.style.overflow = 'hidden'; // prevent background scrolling
+        });
+    });
+
+    if (closeOverlayBtn && serviceOverlay) {
+        closeOverlayBtn.addEventListener('click', () => {
+            serviceOverlay.classList.remove('active');
+            document.body.style.overflow = '';
+        });
+    }
+
+    // 7. Utility Logic
     document.querySelector('#back-to-top-btn')?.addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
     
     const connectImage = document.querySelector('.connect-image');
@@ -374,6 +520,19 @@ document.addEventListener('DOMContentLoaded', () => {
         new IntersectionObserver((entries) => {
             entries.forEach(entry => { if (entry.isIntersecting) connectImage.classList.add('animate-in'); });
         }, { threshold: 0.2 }).observe(connectImage);
+    }
+
+    // Trigger service pill entrance animations
+    const servicePillsAnim = document.querySelectorAll('.service-pill');
+    if (servicePillsAnim.length > 0) {
+        const serviceObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => { 
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('animate-in'); 
+                }
+            });
+        }, { threshold: 0.2 });
+        servicePillsAnim.forEach(pill => serviceObserver.observe(pill));
     }
     
     // Minimal Mute Buttons
