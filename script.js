@@ -1,6 +1,43 @@
 // Wait for DOM layout to fully load
 document.addEventListener('DOMContentLoaded', () => {
 
+    // Preloader Logic
+    const preloader = document.getElementById('site-preloader');
+    const counterElement = document.getElementById('preloader-counter');
+
+    if (preloader && counterElement) {
+        document.body.classList.add('preloader-active');
+        let count = 0;
+        
+        // Simulate fast loading progress (0 to 100)
+        const updateCounter = () => {
+            if (count < 100) {
+                // Random increment to make it look realistic but fast
+                let increment = Math.floor(Math.random() * 10) + 2;
+                count += increment;
+                if (count > 100) count = 100;
+                
+                counterElement.textContent = count;
+                
+                // Fast delay
+                let delay = Math.floor(Math.random() * 30) + 15;
+                
+                if (count === 100) {
+                    setTimeout(() => {
+                        preloader.classList.add('hidden');
+                        document.body.classList.remove('preloader-active');
+                    }, 300); // Brief pause at 100 before hiding
+                } else {
+                    setTimeout(updateCounter, delay);
+                }
+            }
+        };
+        
+        // Start counter
+        updateCounter();
+    }
+
+
     // Navbar scroll effect
     const header = document.querySelector('header');
 
