@@ -5,24 +5,25 @@ import { resolve } from 'path';
 
 export default defineConfig({
   plugins: [react()],
+  root: './',
   resolve: {
     alias: {
       "@": path.resolve(__dirname, "./"),
     },
   },
   build: {
+    outDir: 'dist',
     rollupOptions: {
       input: {
-        main: resolve(__dirname, 'index.html'),
-        '01-design': resolve(__dirname, '01-design.html'),
-        '0104-design': resolve(__dirname, '0104-design.html'),
-        'about-body': resolve(__dirname, 'about-body.html'),
-        'about-design': resolve(__dirname, 'about-design.html'),
-        'connect-design': resolve(__dirname, 'connect-design.html'),
-        'figma-testimonial': resolve(__dirname, 'figma-testimonial.html'),
-        'services-design': resolve(__dirname, 'services-design.html'),
-        'services2-design': resolve(__dirname, 'services2-design.html'),
-        'testimonial-design': resolve(__dirname, 'testimonial-design.html'),
+        main: 'index.html',
+        '01-design': '01-design.html',
+        '0104-design': '0104-design.html',
+        'about-design': 'about-design.html',
+        'connect-design': 'connect-design.html',
+        'figma-testimonial': 'figma-testimonial.html',
+        'services-design': 'services-design.html',
+        'services2-design': 'services2-design.html',
+        'testimonial-design': 'testimonial-design.html',
       },
     },
   },

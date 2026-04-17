@@ -211,28 +211,28 @@ document.addEventListener('DOMContentLoaded', () => {
             videoBody: 'https://player.vimeo.com/video/1183999550?badge=0&autopause=0&player_id=0&app_id=58479&background=1',
             name: 'Biprojit Biswas',
             company: 'Founder & CEO BipMinds_Tech',
-            image: 'testimonial/Biprojit.jpg'
+            image: '/testimonial/Biprojit.jpg'
         },
         {
             index: '02',
             quote: 'I usually send him a chaotic folder of raw footage and a vague \'make this look cool\' text ( not recommended), and he somehow translates my brain-scrambles into actual art. <span class=\"highlight-red\">He’s not just a video editor, he’s a literal idea catcher with a great value of timelines.</span> If you value your sanity and want your content to actually pop, Keshav is your human.',
             name: 'Nafisa Rahaman',
             company: 'Brand Strategist | GTM, D2C, Digital + Delivery Tech |',
-            image: 'testimonial/Nafisa.jpg'
+            image: '/testimonial/Nafisa.jpg'
         },
         {
             index: '03',
             quote: 'I found Keshav on Instagram when I was looking for an editor. He reached out via DM, and after reviewing some of his samples, I decided to work with him on one of my YouTube videos. <span class=\"highlight-red\">The experience was great he communicates clearly, understands requirements well, and delivers exactly what’s needed.</span> The final video turned out really good. Definitely recommend working with him.',
             name: 'Sudhanshu Kundu',
             company: 'YouTuber | Creative Strategist',
-            image: 'testimonial/Sudhanshu.jpg'
+            image: '/testimonial/Sudhanshu.jpg'
         },
         {
             index: '04',
             quote: 'Hey keshav, I wanted to tell you something that you\'re working with me since very long time and <span class=\"highlight-red\">the edits you do are far beyond good</span> 🔥. Also the delivery time, ideation, motion graphics everything is really good.',
             name: 'Rumit Dihora',
             company: 'Video Editor | Visual Storyteller | Crafting Engaging Narratives',
-            image: 'testimonial/Rumit.jpg'
+            image: '/testimonial/Rumit.jpg'
         }
     ];
 
