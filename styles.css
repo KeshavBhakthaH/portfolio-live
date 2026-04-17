@@ -1,5 +1,11 @@
 /* Typography & Color Variables */
 
+@property --spotlight-color {
+    syntax: '<color>';
+    initial-value: #D9D9D9;
+    inherits: false;
+}
+
 
 /* ---- Site Preloader ---- */
 #site-preloader {
@@ -267,6 +273,54 @@ nav {
     background-color: var(--bg-dark);
     color: var(--text-light);
     overflow: hidden;
+}
+
+/* Grid lines overlay with vignette fade */
+.grid-overlay {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    opacity: 0.2;
+    background-image:
+        linear-gradient(to right, #D9D9D9 1px, transparent 1px),
+        linear-gradient(to bottom, #D9D9D9 1px, transparent 1px);
+    background-size: 48px 48px;
+    -webkit-mask-image: radial-gradient(ellipse 50% 40% at 50% 50%, black 0%, transparent 100%);
+    mask-image: radial-gradient(ellipse 50% 40% at 50% 50%, black 0%, transparent 100%);
+    pointer-events: none;
+}
+
+
+
+
+/* Wave layer — sweeps a bright band left to right on loop */
+.grid-wave {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    opacity: 0.2;
+    background-image:
+        linear-gradient(to right, #D9D9D9 1px, transparent 1px),
+        linear-gradient(to bottom, #D9D9D9 1px, transparent 1px);
+    background-size: 48px 48px;
+    -webkit-mask-image: linear-gradient(to right, transparent 0%, transparent 0%, black 6%, transparent 12%, transparent 100%);
+    mask-image: linear-gradient(to right, transparent 0%, transparent 0%, black 6%, transparent 12%, transparent 100%);
+    mask-size: 300% 100%;
+    -webkit-mask-size: 300% 100%;
+    animation: wave-sweep 6s linear infinite;
+    pointer-events: none;
+}
+
+@keyframes wave-sweep {
+    0% {
+        mask-position: 100% 0;
+        -webkit-mask-position: 100% 0;
+    }
+
+    100% {
+        mask-position: -100% 0;
+        -webkit-mask-position: -100% 0;
+    }
 }
 
 .label {
