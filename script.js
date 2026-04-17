@@ -191,8 +191,16 @@ document.addEventListener('DOMContentLoaded', () => {
             const player = new Vimeo.Player(iframe);
             vimeoPlayers.set(iframe, player);
             
-            // Default: Muted
-            player.setMuted(true);
+            // Mark as not ready initially
+            player.isReady = false;
+
+            // Wait for player to be READY before sending commands
+            player.ready().then(() => {
+                player.isReady = true;
+                player.setMuted(true);
+            }).catch(err => {
+                console.error("Vimeo player failed to initialize:", err);
+            });
 
             // Setup loading percentage overlay
             const loaderOverlay = document.createElement('div');
@@ -350,12 +358,24 @@ document.addEventListener('DOMContentLoaded', () => {
                     if (entry.isIntersecting) {
                         // Play video when card enters viewport
                         if (player) {
-                            player.play().then(() => {
-                                if (placeholder) placeholder.style.opacity = '0';
-                                video.style.opacity = '1';
-                            }).catch(err => {
-                                console.log("Autoplay failed for Vimeo video:", err);
-                            });
+                            // Only play if the player is confirmed READY
+                            if (player.isReady) {
+                                player.play().then(() => {
+                                    if (placeholder) placeholder.style.opacity = '0';
+                                    video.style.opacity = '1';
+                                }).catch(err => {
+                                    console.log("Autoplay failed for Vimeo video:", err);
+                                });
+                            } else {
+                                // If not ready yet, wait for ready then play
+                                player.ready().then(() => {
+                                    player.isReady = true;
+                                    player.play().then(() => {
+                                        if (placeholder) placeholder.style.opacity = '0';
+                                        video.style.opacity = '1';
+                                    });
+                                });
+                            }
                         } else if (video.tagName === 'VIDEO') {
                             video.play().then(() => {
                                 if (placeholder) placeholder.style.opacity = '0';
@@ -721,7 +741,12 @@ document.addEventListener('DOMContentLoaded', () => {
                             // Re-initialize player for the new SRC
                             const player = new Vimeo.Player(videoEl);
                             vimeoPlayers.set(videoEl, player);
-                            player.play();
+                            player.isReady = false;
+                            player.ready().then(() => {
+                                player.isReady = true;
+                                player.setMuted(true);
+                                player.play();
+                            });
                         } else {
                             videoEl.src = data.videoBody;
                             videoEl.play();
