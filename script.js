@@ -170,9 +170,8 @@ document.addEventListener('DOMContentLoaded', () => {
     window.videoProgressMap = new Map();
     const videoCards = document.querySelectorAll('.video-card');
 
-    // Helper: initialize a single Vimeo player with auto-retry on failure
-    const initVimeoPlayer = (card, iframe, retryCount = 0) => {
-        const MAX_RETRIES = 3;
+    // Helper: initialize a single Vimeo player — silent retries, spinner-only buffering UX
+    const initVimeoPlayer = (card, iframe) => {
         const originalSrc = iframe.getAttribute('data-original-src') || iframe.src;
         iframe.setAttribute('data-original-src', originalSrc);
 
@@ -180,81 +179,98 @@ document.addEventListener('DOMContentLoaded', () => {
         vimeoPlayers.set(iframe, player);
         player.isReady = false;
 
-        // Get or create loader overlay
+        // Get or create spinner overlay (no text, no background block)
         let loaderOverlay = card.querySelector('.video-loader-overlay');
         if (!loaderOverlay) {
             loaderOverlay = document.createElement('div');
             loaderOverlay.classList.add('video-loader-overlay');
-            loaderOverlay.textContent = '0%';
+            const spinner = document.createElement('div');
+            spinner.classList.add('video-buffer-spinner');
+            loaderOverlay.appendChild(spinner);
             card.appendChild(loaderOverlay);
         }
-        loaderOverlay.style.opacity = '1';
+        // Start hidden — never block the video
+        loaderOverlay.classList.remove('buffering');
 
         window.videoProgressMap.set(iframe, 0);
 
-        const retryLoad = () => {
-            if (retryCount >= MAX_RETRIES) {
-                loaderOverlay.textContent = 'Reload';
-                loaderOverlay.style.cursor = 'pointer';
-                loaderOverlay.style.pointerEvents = 'auto';
-                loaderOverlay.onclick = () => {
-                    loaderOverlay.textContent = '0%';
-                    loaderOverlay.style.cursor = '';
-                    loaderOverlay.style.pointerEvents = '';
-                    loaderOverlay.onclick = null;
-                    iframe.src = originalSrc;
-                    initVimeoPlayer(card, iframe, 0);
-                };
-                return;
-            }
-            const delay = Math.pow(2, retryCount + 1) * 1000; // 2s, 4s, 8s
-            console.warn(`Vimeo video retry ${retryCount + 1}/${MAX_RETRIES} in ${delay / 1000}s`, originalSrc);
-            loaderOverlay.textContent = 'Retrying...';
-            setTimeout(() => {
-                iframe.src = originalSrc;
-                initVimeoPlayer(card, iframe, retryCount + 1);
-            }, delay);
+        let bufferTimer = null;
+        let isPlaying = false;
+
+        const showSpinner = () => loaderOverlay.classList.add('buffering');
+        const hideSpinner = () => {
+            clearTimeout(bufferTimer);
+            loaderOverlay.classList.remove('buffering');
         };
 
         player.ready().then(() => {
             player.isReady = true;
-            player.setQuality('360p');
-            player.setMuted(true);
+            player.setQuality('360p').catch(() => {});
+            player.setMuted(true).catch(() => {});
         }).catch(() => {
-            retryLoad();
+            // Silent background retry after 3s — no UI change
+            setTimeout(() => {
+                const newPlayer = new Vimeo.Player(iframe);
+                newPlayer.ready().then(() => {
+                    newPlayer.isReady = true;
+                    newPlayer.setQuality('360p').catch(() => {});
+                    newPlayer.setMuted(true).catch(() => {});
+                    vimeoPlayers.set(iframe, newPlayer);
+                }).catch(() => {});
+            }, 3000);
         });
 
-        player.on('error', () => {
-            retryLoad();
+        player.on('play', () => {
+            isPlaying = true;
+            hideSpinner();
+            // Fade out the number placeholder
+            const placeholder = card.querySelector('.video-placeholder');
+            if (placeholder) placeholder.style.opacity = '0';
+        });
+
+        player.on('pause', () => {
+            isPlaying = false;
+        });
+
+        // Buffering: show spinner after a 600ms stall so brief pauses don't flash
+        player.on('bufferstart', () => {
+            bufferTimer = setTimeout(() => {
+                showSpinner();
+            }, 600);
+        });
+
+        player.on('bufferend', () => {
+            hideSpinner();
+        });
+
+        // When timeupdate fires, playback is live — clear spinner
+        player.on('timeupdate', () => {
+            if (loaderOverlay.classList.contains('buffering')) {
+                hideSpinner();
+            }
         });
 
         player.on('progress', (data) => {
-            const p = data.percent;
-            window.videoProgressMap.set(iframe, p);
-            loaderOverlay.textContent = `${Math.round(p * 100)}%`;
-            if (p >= 0.95) {
-                loaderOverlay.style.opacity = '0';
-                setTimeout(() => loaderOverlay.remove(), 500);
-            }
+            window.videoProgressMap.set(iframe, data.percent);
             if (window.updateGlobalPreloader) window.updateGlobalPreloader();
-        });
-
-        // If video starts playing, hide the loader immediately
-        player.on('play', () => {
-            loaderOverlay.style.opacity = '0';
-            setTimeout(() => loaderOverlay.remove(), 500);
         });
 
         player.on('loaded', () => {
             window.videoProgressMap.set(iframe, Math.max(window.videoProgressMap.get(iframe) || 0, 0.1));
             if (window.updateGlobalPreloader) window.updateGlobalPreloader();
         });
+
+        // Error: silent — do NOT refresh iframe or show UI. Just log.
+        player.on('error', (err) => {
+            console.warn('Vimeo player error (silent):', err);
+            hideSpinner();
+        });
     };
 
     videoCards.forEach(card => {
         const iframe = card.querySelector('.video-preview');
         if (iframe && iframe.tagName === 'IFRAME') {
-            initVimeoPlayer(card, iframe, 0);
+            initVimeoPlayer(card, iframe);
         }
     });
 
@@ -348,21 +364,20 @@ document.addEventListener('DOMContentLoaded', () => {
                 if (data.videoBody && videoIframe) {
                     tQuoteEl.style.display = 'none';
                     videoContainer.style.display = 'flex';
-                    videoIframe.src = data.videoBody;
-                    const player = new Vimeo.Player(videoIframe);
-                    vimeoPlayers.set(videoIframe, player);
-                    player.isReady = false;
-                    player.ready().then(() => {
-                        player.isReady = true;
-                        player.setQuality('360p');
-                        player.setMuted(true);
-                        player.play();
-                    });
-                    window.videoProgressMap.set(videoIframe, 0);
-                    player.on('progress', (d) => {
-                        window.videoProgressMap.set(videoIframe, d.percent);
-                        if (window.updateGlobalPreloader) window.updateGlobalPreloader();
-                    });
+                    // Only update src if it has changed
+                    if (videoIframe.src !== data.videoBody) {
+                        videoIframe.src = data.videoBody;
+                    }
+                    // Use the shared initVimeoPlayer for consistent spinner-only UX
+                    const testiCard = videoIframe.closest('.video-card');
+                    if (testiCard) initVimeoPlayer(testiCard, videoIframe);
+                    const player = vimeoPlayers.get(videoIframe);
+                    if (player) {
+                        player.ready().then(() => {
+                            player.setMuted(true).catch(() => {});
+                            player.play().catch(() => {});
+                        }).catch(() => {});
+                    }
                 } else {
                     if (videoContainer) videoContainer.style.display = 'none';
                     tQuoteEl.style.display = 'block';
