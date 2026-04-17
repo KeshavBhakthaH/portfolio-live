@@ -306,27 +306,6 @@ nav {
     pointer-events: none;
     transform: scale(1.15);
     /* Fisheye scale effect */
-    animation: spotlight-rgb 4s linear infinite;
-}
-
-@keyframes spotlight-rgb {
-
-    0%,
-    100% {
-        --spotlight-color: #ff3c3c;
-    }
-
-    /* Vibrant Red */
-    33% {
-        --spotlight-color: #3cff3c;
-    }
-
-    /* Vibrant Green */
-    66% {
-        --spotlight-color: #3c3cff;
-    }
-
-    /* Vibrant Blue */
 }
 
 
