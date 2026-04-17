@@ -197,6 +197,7 @@ document.addEventListener('DOMContentLoaded', () => {
             // Wait for player to be READY before sending commands
             player.ready().then(() => {
                 player.isReady = true;
+                player.setQuality('360p');
                 player.setMuted(true);
             }).catch(err => {
                 console.error("Vimeo player failed to initialize:", err);
@@ -744,6 +745,7 @@ document.addEventListener('DOMContentLoaded', () => {
                             player.isReady = false;
                             player.ready().then(() => {
                                 player.isReady = true;
+                                player.setQuality('360p');
                                 player.setMuted(true);
                                 player.play();
                             });
