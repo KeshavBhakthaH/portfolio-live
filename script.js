@@ -193,6 +193,30 @@ document.addEventListener('DOMContentLoaded', () => {
             
             // Default: Muted
             player.setMuted(true);
+
+            // Setup loading percentage overlay
+            const loaderOverlay = document.createElement('div');
+            loaderOverlay.classList.add('video-loader-overlay');
+            loaderOverlay.textContent = '0%';
+            card.appendChild(loaderOverlay);
+
+            let percent = 0;
+            const loadingInterval = setInterval(() => {
+                if (percent < 98) {
+                    percent += Math.floor(Math.random() * 5) + 1;
+                    if (percent > 98) percent = 98;
+                    loaderOverlay.textContent = `${percent}%`;
+                }
+            }, 80);
+
+            player.on('loaded', () => {
+                clearInterval(loadingInterval);
+                loaderOverlay.textContent = '100%';
+                setTimeout(() => {
+                    loaderOverlay.style.opacity = '0';
+                    setTimeout(() => loaderOverlay.remove(), 500);
+                }, 200);
+            });
         }
     });
 
