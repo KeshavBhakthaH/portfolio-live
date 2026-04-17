@@ -427,6 +427,10 @@ document.addEventListener('DOMContentLoaded', () => {
         
         if (displayPercent > 100) displayPercent = 100;
         if (preloaderNum) preloaderNum.textContent = displayPercent + ' %';
+        
+        // Sync progress bar width
+        const barFill = document.getElementById('preloader-bar');
+        if (barFill) barFill.style.width = displayPercent + '%';
 
         if (displayPercent >= 100) {
             finishPreloader();
@@ -437,15 +441,16 @@ document.addEventListener('DOMContentLoaded', () => {
         if (isFinished) return;
         isFinished = true;
         
-        // Fast UI transition setup
-        let currentDisplay = parseInt(preloaderNum?.textContent) || 0;
+        // Animate bar to 100% and counter, then wipe up
+        if (preloaderNum) preloaderNum.textContent = '100 %';
+        const barFill = document.getElementById('preloader-bar');
+        if (barFill) barFill.style.width = '100%';
         
         setTimeout(() => {
             if (sitePreloader) sitePreloader.classList.add('hidden');
             document.body.classList.remove('preloader-active');
-            // Trigger hero animations if they exist
             document.querySelector('.hero-content')?.classList.add('reveal');
-        }, 300);
+        }, 500);
     };
 
     // Fast Safety Timeout: Max 8 seconds waiting
