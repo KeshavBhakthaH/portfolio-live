@@ -1,0 +1,507 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Portfolio</title>
+    <!-- Importing a modern font -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@1&family=Instrument+Serif:ital@1&family=Geist+Mono:wght@100..900&family=Inter:wght@300;400;500;600;800&family=Roboto+Mono:wght@300&family=Trispace:wght@100..800&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+    <input type="checkbox" id="mobile-menu-toggle" class="mobile-menu-checkbox" aria-hidden="true">
+    <div class="mobile-nav-overlay">
+        <label for="mobile-menu-toggle" class="mobile-nav-close" aria-label="Close menu">
+            <span></span><span></span>
+        </label>
+        <div class="mobile-nav-watermark">KM</div>
+        <ul class="mobile-nav-list">
+            <li style="--i: 0"><span class="nav-index">01</span><a href="#about"
+                    onclick="document.getElementById('mobile-menu-toggle').checked=false">About</a></li>
+            <li style="--i: 1"><span class="nav-index">02</span><a href="#services"
+                    onclick="document.getElementById('mobile-menu-toggle').checked=false">Services</a></li>
+            <li style="--i: 2"><span class="nav-index">03</span><a href="#portfolio"
+                    onclick="document.getElementById('mobile-menu-toggle').checked=false">Portfolio</a></li>
+            <li style="--i: 3"><span class="nav-index">04</span><a href="#voices"
+                    onclick="document.getElementById('mobile-menu-toggle').checked=false">Voices</a></li>
+            <li style="--i: 4"><span class="nav-index">05</span><a href="#contact"
+                    onclick="document.getElementById('mobile-menu-toggle').checked=false">Contact</a></li>
+        </ul>
+        <div class="mobile-nav-footer">
+            <p class="mobile-nav-tagline">Content that holds attention.</p>
+            <div class="mobile-nav-socials">
+                <a href="mailto:hkeshavb@gmail.com">hkeshavb@gmail.com</a>
+                <div class="mobile-nav-social-icons">
+                    <a href="https://www.instagram.com/keshav_media?igsh=djB3YWh2eTZjaTN5" target="_blank"
+                        rel="noopener noreferrer">IG</a>
+                    <a href="https://www.linkedin.com/in/h-keshava-bhaktha-32867b2b6" target="_blank"
+                        rel="noopener noreferrer">LI</a>
+                    <a href="https://www.youtube.com/@HKBhaktha" target="_blank" rel="noopener noreferrer">YT</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="main-content-wrapper">
+        <header>
+            <nav>
+                <ul class="nav-links">
+                    <li class="logo"><a href="#"><img src="assets/logo.png" alt="Keshav Media Logo"
+                                style="height: 16px; width: auto; vertical-align: middle;"></a></li>
+                    <li><a href="#services">Services</a></li>
+                    <li><a href="#portfolio">Portfolio</a></li>
+                    <li><a href="#voices">Voices</a></li>
+                    <li><a href="#contact">Contact</a></li>
+                </ul>
+                <label for="mobile-menu-toggle" class="mobile-menu-btn" aria-label="Toggle menu">
+                    <span class="hamburger-line"></span>
+                    <span class="hamburger-line"></span>
+                    <span class="hamburger-line"></span>
+                </label>
+            </nav>
+        </header>
+
+        <main>
+            <section id="hero" class="hero-section">
+                <div class="grid-overlay"></div>
+                <div class="grid-spotlight"></div>
+                <div class="grid-wave"></div>
+                <div class="label">
+                    <a href="#about" class="logo-link">
+                        <img src="assets/logo.png" alt="Keshav Media Logo"
+                            style="height: 120px; width: auto; filter: drop-shadow(0 0 40px rgba(255, 255, 255, 0.3));">
+                    </a>
+                    <a href="#about" class="hero-scroll-btn" aria-label="Scroll to About">
+                        <svg width="48" height="48" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M10 24H38M38 24L24 10M38 24L24 38" stroke="white" stroke-width="2"
+                                stroke-linecap="round" stroke-linejoin="round" />
+                        </svg>
+                    </a>
+                </div>
+
+            </section>
+
+            <!-- About Section -->
+            <section id="about" class="section about-section">
+                <div class="about-label">About</div>
+                <div class="about-container">
+                    <h2 class="about-headline">
+                        <span class="indent-space"></span>I turn <span class="highlight-red">"too complex"</span> into
+                        <span class="highlight-red">"must-watch."</span> Working across deep-tech and consumer
+                        platforms,
+                        I build content systems prioritizing retention and brand equity. I don't just edit, I <span
+                            class="highlight-red">engineer trust</span>, helping brands simplify messages while
+                        building authority with every view.
+                    </h2>
+                    <div class="about-secondary-wrapper">
+                        <p class="about-description">
+                            Bringing your vision to life quickly and efficiently, whether it's content, videos or Ideas,
+                            I've got it covered, delivering smooth and effective solutions from start to finish
+                        </p>
+                        <a href="#portfolio" class="about-button">See my Work</a>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Services Section -->
+            <section id="services" class="section services-section">
+                <div class="services-label">Services</div>
+                <div class="services-container">
+                    <div class="services-header">
+                        <h2 class="services-headline">What we do ........</h2>
+                        <p class="services-subheadline">From the first idea to the final frame — we've got it covered.
+                        </p>
+                    </div>
+
+                    <div class="services-list">
+                        <div class="service-pill" id="content-planning-pill">
+                            <span class="service-number">01</span>
+                            <span class="service-name">Content Planning</span>
+                            <div class="service-arrow">
+                                <svg width="32" height="32" viewBox="0 0 32 32" fill="none"
+                                    xmlns="http://www.w3.org/2000/svg">
+                                    <circle cx="16" cy="16" r="15" stroke="black" stroke-width="2" />
+                                    <path d="M12 16H20M20 16L17 13M20 16L17 19" stroke="black" stroke-width="2"
+                                        stroke-linecap="round" stroke-linejoin="round" />
+                                </svg>
+                            </div>
+                        </div>
+
+                        <div class="service-pill" id="video-scripting-pill">
+                            <span class="service-number">02</span>
+                            <span class="service-name">Video Scripting</span>
+                            <div class="service-arrow">
+                                <svg width="32" height="32" viewBox="0 0 32 32" fill="none"
+                                    xmlns="http://www.w3.org/2000/svg">
+                                    <circle cx="16" cy="16" r="15" stroke="black" stroke-width="2" />
+                                    <path d="M12 16H20M20 16L17 13M20 16L17 19" stroke="black" stroke-width="2"
+                                        stroke-linecap="round" stroke-linejoin="round" />
+                                </svg>
+                            </div>
+                        </div>
+
+                        <div class="service-pill" id="video-editing-pill">
+                            <span class="service-number">03</span>
+                            <span class="service-name">Video Editing</span>
+                            <div class="service-arrow">
+                                <svg width="32" height="32" viewBox="0 0 32 32" fill="none"
+                                    xmlns="http://www.w3.org/2000/svg">
+                                    <circle cx="16" cy="16" r="15" stroke="black" stroke-width="2" />
+                                    <path d="M12 16H20M20 16L17 13M20 16L17 19" stroke="black" stroke-width="2"
+                                        stroke-linecap="round" stroke-linejoin="round" />
+                                </svg>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Testimonial Section (New White Theme) -->
+            <section id="voices" class="section testimonial-new-section">
+                <div class="testimonial-new-label">Testimonial</div>
+                <div class="testimonial-new-container">
+                    <div class="testimonial-main-content">
+                        <div class="testimonial-new-index" id="testimonial-new-index">01<span
+                                class="index-total">/04</span></div>
+                        <div class="testimonial-quote-wrapper">
+                            <blockquote class="testimonial-new-quote" id="testimonial-new-quote" style="display: none;">
+                            </blockquote>
+                            <div id="video-testimonial-container"
+                                style="display: flex; height: 100%; width: 100%; align-items: center; justify-content: center;">
+                                <div class="video-card"
+                                    style="height: 460px; width: 258px; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.12); margin: 0 auto;">
+                                    <iframe id="testimonial-video-player" class="video-preview"
+                                        src="https://player.vimeo.com/video/1183999550?badge=0&autopause=0&player_id=0&app_id=58479&background=1"
+                                        frameborder="0" allow="autoplay; fullscreen; picture-in-picture"
+                                        style="position:absolute;top:0;left:0;width:100%;height:100%;"></iframe>
+                                    <button class="minimal-mute-btn" aria-label="Toggle Mute">
+                                        <svg class="mute-icon" viewBox="0 0 24 24" width="16" height="16" fill="none"
+                                            stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                            stroke-linejoin="round">
+                                            <path d="M11 5L6 9H2v6h4l5 4V5z"></path>
+                                            <line x1="23" y1="9" x2="17" y2="15"></line>
+                                            <line x1="17" y1="9" x2="23" y2="15"></line>
+                                        </svg>
+                                        <span class="mute-text">Unmute</span>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="testimonial-client-info">
+                            <span class="client-name" id="client-name">Biprojit Biswas</span>
+                            <span class="company-name" id="company-name">Founder & CEO BipMinds_Tech</span>
+                        </div>
+                    </div>
+
+                    <div class="testimonial-nav-vertical">
+                        <button class="nav-arrow up" id="prev-testimonial" aria-label="Previous Testimonial">
+                            <svg width="48" height="48" viewBox="0 0 48 48" fill="none"
+                                xmlns="http://www.w3.org/2000/svg">
+                                <path d="M24 38V10M24 10L10 24M24 10L38 24" stroke="#1E1E1E" stroke-width="4"
+                                    stroke-linecap="round" stroke-linejoin="round" />
+                            </svg>
+                        </button>
+
+                        <div class="profile-stack">
+                            <div class="red-border"></div>
+                            <div class="profile-placeholder slot-center" data-index="0"></div>
+                            <div class="profile-placeholder slot-bottom" data-index="1"></div>
+                            <div class="profile-placeholder slot-hidden-bottom" data-index="2"></div>
+                            <div class="profile-placeholder slot-top" data-index="3"></div>
+                        </div>
+
+                        <button class="nav-arrow down" id="next-testimonial" aria-label="Next Testimonial">
+                            <svg width="48" height="48" viewBox="0 0 48 48" fill="none"
+                                xmlns="http://www.w3.org/2000/svg">
+                                <path d="M24 10L24 38M24 38L38 24M24 38L10 24" stroke="#1E1E1E" stroke-width="4"
+                                    stroke-linecap="round" stroke-linejoin="round " />
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Portfolio Section -->
+            <section id="portfolio" class="section portfolio-section">
+                <div class="portfolio-label">Portfolio</div>
+
+                <div class="portfolio-container">
+                    <!-- Short-form Section -->
+                    <div class="portfolio-group">
+                        <h2 class="portfolio-headline">Short-form Videos</h2>
+                        <p class="portfolio-subheadline">Shorts that reach more. Reels that stick.</p>
+                        <div class="video-grid short-form-grid">
+                            <div class="video-card">
+                                <div class="video-placeholder"><span>01</span></div>
+                                <iframe class="video-preview"
+                                    src="https://player.vimeo.com/video/1183996127?badge=0&autopause=0&player_id=0&app_id=58479&background=1"
+                                    frameborder="0" allow="autoplay; fullscreen; picture-in-picture"
+                                    style="position:absolute;top:0;left:0;width:100%;height:100%;"></iframe>
+                                <button class="minimal-mute-btn" aria-label="Toggle Mute">
+                                    <svg class="mute-icon" viewBox="0 0 24 24" width="16" height="16" fill="none"
+                                        stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                        stroke-linejoin="round">
+                                        <path d="M11 5L6 9H2v6h4l5 4V5z"></path>
+                                        <line x1="23" y1="9" x2="17" y2="15"></line>
+                                        <line x1="17" y1="9" x2="23" y2="15"></line>
+                                    </svg>
+                                    <span class="mute-text">Unmute</span>
+                                </button>
+                            </div>
+                            <div class="video-card">
+                                <div class="video-placeholder"><span>02</span></div>
+                                <iframe class="video-preview"
+                                    src="https://player.vimeo.com/video/1183996505?badge=0&autopause=0&player_id=0&app_id=58479&background=1"
+                                    frameborder="0" allow="autoplay; fullscreen; picture-in-picture"
+                                    style="position:absolute;top:0;left:0;width:100%;height:100%;"></iframe>
+                                <button class="minimal-mute-btn" aria-label="Toggle Mute">
+                                    <svg class="mute-icon" viewBox="0 0 24 24" width="16" height="16" fill="none"
+                                        stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                        stroke-linejoin="round">
+                                        <path d="M11 5L6 9H2v6h4l5 4V5z"></path>
+                                        <line x1="23" y1="9" x2="17" y2="15"></line>
+                                        <line x1="17" y1="9" x2="23" y2="15"></line>
+                                    </svg>
+                                    <span class="mute-text">Unmute</span>
+                                </button>
+                            </div>
+                            <div class="video-card">
+                                <div class="video-placeholder"><span>03</span></div>
+                                <iframe class="video-preview"
+                                    src="https://player.vimeo.com/video/1183996125?badge=0&autopause=0&player_id=0&app_id=58479&background=1"
+                                    frameborder="0" allow="autoplay; fullscreen; picture-in-picture"
+                                    style="position:absolute;top:0;left:0;width:100%;height:100%;"></iframe>
+                                <button class="minimal-mute-btn" aria-label="Toggle Mute">
+                                    <svg class="mute-icon" viewBox="0 0 24 24" width="16" height="16" fill="none"
+                                        stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                        stroke-linejoin="round">
+                                        <path d="M11 5L6 9H2v6h4l5 4V5z"></path>
+                                        <line x1="23" y1="9" x2="17" y2="15"></line>
+                                        <line x1="17" y1="9" x2="23" y2="15"></line>
+                                    </svg>
+                                    <span class="mute-text">Unmute</span>
+                                </button>
+                            </div>
+                            <div class="video-card">
+                                <div class="video-placeholder"><span>04</span></div>
+                                <iframe class="video-preview"
+                                    src="https://player.vimeo.com/video/1183996126?badge=0&autopause=0&player_id=0&app_id=58479%2Fembed&background=1"
+                                    frameborder="0" allow="autoplay; fullscreen; picture-in-picture"
+                                    style="position:absolute;top:0;left:0;width:100%;height:100%;"></iframe>
+                                <button class="minimal-mute-btn" aria-label="Toggle Mute">
+                                    <svg class="mute-icon" viewBox="0 0 24 24" width="16" height="16" fill="none"
+                                        stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                        stroke-linejoin="round">
+                                        <path d="M11 5L6 9H2v6h4l5 4V5z"></path>
+                                        <line x1="23" y1="9" x2="17" y2="15"></line>
+                                        <line x1="17" y1="9" x2="23" y2="15"></line>
+                                    </svg>
+                                    <span class="mute-text">Unmute</span>
+                                </button>
+                            </div>
+                            <div class="video-card">
+                                <div class="video-placeholder"><span>05</span></div>
+                                <iframe class="video-preview"
+                                    src="https://player.vimeo.com/video/1183996130?badge=0&autopause=0&player_id=0&app_id=58479%2Fembed&background=1"
+                                    frameborder="0" allow="autoplay; fullscreen; picture-in-picture"
+                                    style="position:absolute;top:0;left:0;width:100%;height:100%;"></iframe>
+                                <button class="minimal-mute-btn" aria-label="Toggle Mute">
+                                    <svg class="mute-icon" viewBox="0 0 24 24" width="16" height="16" fill="none"
+                                        stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                        stroke-linejoin="round">
+                                        <path d="M11 5L6 9H2v6h4l5 4V5z"></path>
+                                        <line x1="23" y1="9" x2="17" y2="15"></line>
+                                        <line x1="17" y1="9" x2="23" y2="15"></line>
+                                    </svg>
+                                    <span class="mute-text">Unmute</span>
+                                </button>
+                            </div>
+                            <div class="video-card">
+                                <div class="video-placeholder"><span>06</span></div>
+                                <iframe class="video-preview"
+                                    src="https://player.vimeo.com/video/1183996842?title=0&byline=0&portrait=0&badge=0&autopause=0&player_id=0&app_id=58479&background=1"
+                                    frameborder="0" allow="autoplay; fullscreen; picture-in-picture"
+                                    style="position:absolute;top:0;left:0;width:100%;height:100%;"></iframe>
+                                <button class="minimal-mute-btn" aria-label="Toggle Mute">
+                                    <svg class="mute-icon" viewBox="0 0 24 24" width="16" height="16" fill="none"
+                                        stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                        stroke-linejoin="round">
+                                        <path d="M11 5L6 9H2v6h4l5 4V5z"></path>
+                                        <line x1="23" y1="9" x2="17" y2="15"></line>
+                                        <line x1="17" y1="9" x2="23" y2="15"></line>
+                                    </svg>
+                                    <span class="mute-text">Unmute</span>
+                                </button>
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <!-- Long-form Section -->
+                    <div class="portfolio-group">
+                        <h2 class="portfolio-headline">Long-form Videos</h2>
+                        <p class="portfolio-subheadline">Stories that build. Content that leads.</p>
+                        <div class="video-grid long-form-grid">
+                            <div class="video-card horizontal">
+                                <div class="video-placeholder"><span>01</span></div>
+                                <iframe class="video-preview"
+                                    src="https://player.vimeo.com/video/1183998222?title=0&byline=0&portrait=0&badge=0&autopause=0&player_id=0&app_id=58479&background=1"
+                                    frameborder="0" allow="autoplay; fullscreen; picture-in-picture"
+                                    style="position:absolute;top:0;left:0;width:100%;height:100%;"></iframe>
+                                <button class="minimal-mute-btn" aria-label="Toggle Mute">
+                                    <svg class="mute-icon" viewBox="0 0 24 24" width="16" height="16" fill="none"
+                                        stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                        stroke-linejoin="round">
+                                        <path d="M11 5L6 9H2v6h4l5 4V5z"></path>
+                                        <line x1="23" y1="9" x2="17" y2="15"></line>
+                                        <line x1="17" y1="9" x2="23" y2="15"></line>
+                                    </svg>
+                                    <span class="mute-text">Unmute</span>
+                                </button>
+                            </div>
+                            <div class="video-card horizontal">
+                                <div class="video-placeholder"><span>02</span></div>
+                                <iframe class="video-preview"
+                                    src="https://player.vimeo.com/video/1183998224?badge=0&autopause=0&player_id=0&app_id=58479&background=1"
+                                    frameborder="0" allow="autoplay; fullscreen; picture-in-picture"
+                                    style="position:absolute;top:0;left:0;width:100%;height:100%;"></iframe>
+                                <button class="minimal-mute-btn" aria-label="Toggle Mute">
+                                    <svg class="mute-icon" viewBox="0 0 24 24" width="16" height="16" fill="none"
+                                        stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                        stroke-linejoin="round">
+                                        <path d="M11 5L6 9H2v6h4l5 4V5z"></path>
+                                        <line x1="23" y1="9" x2="17" y2="15"></line>
+                                        <line x1="17" y1="9" x2="23" y2="15"></line>
+                                    </svg>
+                                    <span class="mute-text">Unmute</span>
+                                </button>
+                            </div>
+                            <div class="video-card horizontal">
+                                <div class="video-placeholder"><span>03</span></div>
+                                <iframe class="video-preview"
+                                    src="https://player.vimeo.com/video/1183998228?badge=0&autopause=0&player_id=0&app_id=58479&background=1"
+                                    frameborder="0" allow="autoplay; fullscreen; picture-in-picture"
+                                    style="position:absolute;top:0;left:0;width:100%;height:100%;"></iframe>
+                                <button class="minimal-mute-btn" aria-label="Toggle Mute">
+                                    <svg class="mute-icon" viewBox="0 0 24 24" width="16" height="16" fill="none"
+                                        stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                        stroke-linejoin="round">
+                                        <path d="M11 5L6 9H2v6h4l5 4V5z"></path>
+                                        <line x1="23" y1="9" x2="17" y2="15"></line>
+                                        <line x1="17" y1="9" x2="23" y2="15"></line>
+                                    </svg>
+                                    <span class="mute-text">Unmute</span>
+                                </button>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </section>
+
+            <!-- Connect Section -->
+            <section id="contact" class="connect-section">
+                <button class="back-to-top" id="back-to-top-btn" aria-label="Back to top">
+                    <svg width="48" height="48" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M24 38V10M24 10L10 24M24 10L38 24" stroke="white" stroke-width="2"
+                            stroke-linecap="round" stroke-linejoin="round" />
+                    </svg>
+                </button>
+                <div class="grid-overlay"></div>
+                <div class="grid-spotlight"></div>
+                <div class="grid-wave"></div>
+                <div class="connect-background">
+                    <img src="assets/hero.png" alt="Keshav Portrait" class="connect-image">
+                </div>
+                <div class="connect-marquee">
+                    <div class="marquee-inner">
+                        <span>Connect</span>
+                        <span>Connect</span>
+                        <span>Connect</span>
+                        <span>Connect</span>
+                    </div>
+                </div>
+                <div class="connect-container">
+                    <div class="connect-content-left">
+                        <div class="contact-details">
+                            <p class="contact-item">
+                                <span class="contact-label">Mail : </span>
+                                <a href="mailto:hkeshavb@gmail.com" class="contact-value">hkeshavb@gmail.com</a>
+                            </p>
+                            <p class="contact-item">
+                                <span class="contact-label">Phone : </span>
+                                <a href="tel:+918289961040" class="contact-value">+91 82899 61040</a>
+                            </p>
+                        </div>
+                        <div class="connect-socials">
+                            <a href="https://www.instagram.com/keshav_media?igsh=djB3YWh2eTZjaTN5" class="social-icon"
+                                target="_blank" rel="noopener noreferrer">
+                                <svg viewBox="0 0 24 24" width="28" height="28" stroke="currentColor" stroke-width="1.5"
+                                    fill="none" stroke-linecap="round" stroke-linejoin="round">
+                                    <rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect>
+                                    <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path>
+                                    <line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line>
+                                </svg>
+                            </a>
+                            <a href="https://www.linkedin.com/in/h-keshava-bhaktha-32867b2b6" class="social-icon"
+                                target="_blank" rel="noopener noreferrer">
+                                <svg viewBox="0 0 24 24" width="28" height="28" stroke="currentColor" stroke-width="1.5"
+                                    fill="none" stroke-linecap="round" stroke-linejoin="round">
+                                    <path
+                                        d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z">
+                                    </path>
+                                    <rect x="2" y="9" width="4" height="12"></rect>
+                                    <circle cx="4" cy="4" r="2"></circle>
+                                </svg>
+                            </a>
+                            <a href="https://www.youtube.com/@HKBhaktha" class="social-icon" target="_blank"
+                                rel="noopener noreferrer">
+                                <svg viewBox="0 0 24 24" width="28" height="28" stroke="currentColor" stroke-width="1.5"
+                                    fill="none" stroke-linecap="round" stroke-linejoin="round">
+                                    <path
+                                        d="M22.54 6.42a2.78 2.78 0 0 0-1.94-2C18.88 4 12 4 12 4s-6.88 0-8.6.46a2.78 2.78 0 0 0-1.94 2A29 29 0 0 0 1 11.75a29 29 0 0 0 .46 5.33 2.78 2.78 0 0 0 1.94 2c1.72.46 8.6.46 8.6.46s6.88 0 8.6-.46a2.78 2.78 0 0 0 1.94-2 29 29 0 0 0 .46-5.33 29 29 0 0 0-.46-5.33z">
+                                    </path>
+                                    <polygon points="9.75 15.02 15.5 11.75 9.75 8.48 9.75 15.02"></polygon>
+                                </svg>
+                            </a>
+                        </div>
+                    </div>
+                    <div class="connect-content-right">
+                        <div class="connect-branding">
+                            <img src="assets/logo.png" alt="Keshav Media Logo" style="height: 60px; width: auto;">
+                        </div>
+                    </div>
+                </div>
+
+
+
+
+    </div>
+
+    <div id="service-detail-overlay" class="service-overlay">
+        <div class="overlay-header">
+            <button class="close-overlay" aria-label="Close Overlay">
+                <svg width="48" height="48" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M36 12L12 36M12 12L36 36" stroke="white" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round" />
+                </svg>
+            </button>
+            <h1 class="overlay-title" id="overlay-title-text">01 Content Planning</h1>
+        </div>
+        <div class="overlay-content" id="overlay-items-container">
+            <!-- Dynamic items go here -->
+        </div>
+    </div>
+
+    <div class="custom-cursor"><span class="cursor-text"></span></div>
+    <script src="https://player.vimeo.com/api/player.js"></script>
+    <script src="script.js"></script>
+</body>
+
+
+</html>
