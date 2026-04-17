@@ -312,28 +312,11 @@ document.addEventListener('DOMContentLoaded', () => {
         videoCards.forEach(card => videoObserver.observe(card));
     }
 
-    // Minimal Mute Button Logic
+    // Minimal Mute Button Logic with Optimistic UI
     const minimalMuteBtns = document.querySelectorAll('.minimal-mute-btn');
-    minimalMuteBtns.forEach(btn => {
-        btn.addEventListener('click', (e) => {
-            e.stopPropagation(); // Prevent card click
-            const video = btn.closest('.video-card').querySelector('.video-preview');
-            if (!video) return;
-
-            const player = vimeoPlayers.get(video);
-            
-            if (player) {
-                player.getMuted().then(isMuted => {
-                    const newMuted = !isMuted;
-                    player.setMuted(newMuted);
-                    updateMuteUI(btn, newMuted);
-                });
-            } else if (video.tagName === 'VIDEO') {
-                video.muted = !video.muted;
-                updateMuteUI(btn, video.muted);
-            }
-        });
-    });
+    
+    // Track muted state locally to ensure instant UI response
+    const mutedStates = new WeakMap();
 
     const updateMuteUI = (btn, isMuted) => {
         if (isMuted) {
@@ -356,6 +339,39 @@ document.addEventListener('DOMContentLoaded', () => {
             `;
         }
     };
+
+    minimalMuteBtns.forEach(btn => {
+        // Initialize state: all videos start muted
+        mutedStates.set(btn, true);
+
+        btn.addEventListener('click', (e) => {
+            e.stopPropagation(); // Prevent card click
+            const card = btn.closest('.video-card');
+            if (!card) return;
+            
+            const video = card.querySelector('.video-preview');
+            if (!video) return;
+
+            // Optimistic Toggle
+            const currentlyMuted = mutedStates.get(btn);
+            const nextMuted = !currentlyMuted;
+            
+            // 1. Update UI instantly
+            updateMuteUI(btn, nextMuted);
+            mutedStates.set(btn, nextMuted);
+
+            // 2. Perform API action in background
+            const player = vimeoPlayers.get(video);
+            if (player) {
+                player.setMuted(nextMuted).catch(err => {
+                    console.error("Failed to update Vimeo mute state:", err);
+                    // Revert UI on error if necessary, though unlikely for mute
+                });
+            } else if (video.tagName === 'VIDEO') {
+                video.muted = nextMuted;
+            }
+        });
+    });
 
     // Initially hide sections with JS, setting up the transition
     sections.forEach(section => {
