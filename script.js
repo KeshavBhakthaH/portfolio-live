@@ -585,7 +585,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 const y = clientY - rect.top;
                 
                 // Update the mask position dynamically to follow the cursor
-                const maskStyle = `circle 280px at ${x}px ${y}px`;
+                const maskStyle = `circle 150px at ${x}px ${y}px`;
                 spotlight.style.webkitMaskImage = `radial-gradient(${maskStyle}, black 0%, transparent 100%)`;
                 spotlight.style.maskImage = `radial-gradient(${maskStyle}, black 0%, transparent 100%)`;
             });
