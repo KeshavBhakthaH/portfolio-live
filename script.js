@@ -301,6 +301,15 @@ document.addEventListener('DOMContentLoaded', () => {
                                 video.style.opacity = '1';
                             });
                         }
+                    } else {
+                        // Pause video when card leaves viewport
+                        if (player) {
+                            player.pause();
+                        } else if (video.tagName === 'VIDEO') {
+                            video.pause();
+                        }
+                        if (placeholder) placeholder.style.opacity = '1';
+                        video.style.opacity = '0';
                     }
                 }
             });
