@@ -1226,6 +1226,7 @@ nav {
     /* Back to circle */
     box-shadow: 0 0 10px rgba(255, 62, 62, 0.3);
     /* Softer shadow */
+    opacity: 1 !important;
 }
 
 .custom-cursor.cursor-more .cursor-text {
