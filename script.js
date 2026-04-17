@@ -175,6 +175,12 @@ document.addEventListener('DOMContentLoaded', () => {
                 if (window.updateGlobalPreloader) window.updateGlobalPreloader();
             });
 
+            // If video starts playing, hide the loader immediately
+            player.on('play', () => {
+                loaderOverlay.style.opacity = '0';
+                setTimeout(() => loaderOverlay.remove(), 500);
+            });
+
             player.on('loaded', () => {
                 window.videoProgressMap.set(iframe, Math.max(window.videoProgressMap.get(iframe) || 0, 0.1));
                 if (window.updateGlobalPreloader) window.updateGlobalPreloader();
